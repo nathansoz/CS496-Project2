@@ -370,7 +370,15 @@ namespace Project2.Controllers
             retrievedSlip.CurrentBoat = id;
             retrievedSlip.ArrivalDate = entity.ArrivalDate;
 
-            await _slipService.UpsertAsync(retrievedSlip);
+            retrievedBoat.AtSea = false;
+
+            List<Task> completionObject = new List<Task>
+            {
+                _slipService.UpsertAsync(retrievedSlip),
+                _boatService.UpsertAsync(retrievedBoat)
+            };
+
+            await Task.WhenAll(completionObject);
 
             return Ok();
         }
