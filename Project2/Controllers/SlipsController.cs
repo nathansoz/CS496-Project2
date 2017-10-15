@@ -15,14 +15,17 @@ namespace Project2.Controllers
     [Route("api/[controller]")]
     public class SlipsController : Controller
     {
-        IDocumentDbService<SlipEntity> _documentDbService;
+        IDocumentDbService<SlipEntity> _slipService;
+
+        IDocumentDbService<BoatEntity> _boatService;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SlipsController(IDocumentDbService<SlipEntity> documentDbService)
+        public SlipsController(IDocumentDbService<SlipEntity> slipService, IDocumentDbService<BoatEntity> boatService)
         {
-            _documentDbService = documentDbService;
+            _slipService = slipService;
+            _boatService = boatService;
         }
 
         /// <summary>
@@ -35,12 +38,12 @@ namespace Project2.Controllers
         {
             if (id == Guid.Empty)
             {
-                return Ok(await _documentDbService.GetAsync());
+                return Ok(await _slipService.GetAsync());
             }
 
             try
             {
-                return Ok(await _documentDbService.GetAsync(id));
+                return Ok(await _slipService.GetAsync(id));
             }
             catch (DocumentClientException ex)
             {
@@ -79,7 +82,7 @@ namespace Project2.Controllers
                 return BadRequest("The id cannot be included.");
             }
 
-            if ((await _documentDbService.GetAsync()).Any(x => x.Number == slip.Number))
+            if ((await _slipService.GetAsync()).Any(x => x.Number == slip.Number))
             {
                 return BadRequest($"The request tried to add a slip number that already exists.");
             }
@@ -90,7 +93,7 @@ namespace Project2.Controllers
 
             try
             {
-                await _documentDbService.UpsertAsync(slip);
+                await _slipService.UpsertAsync(slip);
                 return Ok(slip);
             }
             catch
@@ -126,7 +129,7 @@ namespace Project2.Controllers
                 return BadRequest("The id cannot be included.");
             }
 
-            if ((await _documentDbService.GetAsync()).Any(x => x.Number == replacementSlip.Number))
+            if ((await _slipService.GetAsync()).Any(x => x.Number == replacementSlip.Number))
             {
                 return BadRequest($"The request tried to replace with a slip that already exists.");
             }
@@ -136,7 +139,7 @@ namespace Project2.Controllers
             SlipEntity slip;
             try
             {
-                slip = await _documentDbService.GetAsync(id);
+                slip = await _slipService.GetAsync(id);
             }
             catch (DocumentClientException ex)
             {
@@ -148,7 +151,7 @@ namespace Project2.Controllers
 
             try
             {
-                await _documentDbService.UpsertAsync(replacementSlip);
+                await _slipService.UpsertAsync(replacementSlip);
                 return Ok(replacementSlip);
             }
             catch
@@ -174,7 +177,7 @@ namespace Project2.Controllers
 
             try
             {
-                slip = await _documentDbService.GetAsync(id);
+                slip = await _slipService.GetAsync(id);
             }
             catch (DocumentClientException ex)
             {
@@ -186,9 +189,26 @@ namespace Project2.Controllers
                 return StatusCode(500);
             }
 
+            if(slip.CurrentBoat != null)
+            {
+                try
+                {
+                    BoatEntity boat = await _boatService.GetAsync(id);
+                    boat.AtSea = true;
+                    await _boatService.UpsertAsync(boat);
+                }
+                catch (DocumentClientException ex)
+                {
+                    if (!ex.Message.Contains("Resource Not Found"))
+                    {
+                        return StatusCode(500);
+                    }
+                }
+            }
+
             try
             {
-                await _documentDbService.DeleteAsync(slip.Id);
+                await _slipService.DeleteAsync(slip.Id);
                 return Ok();
             }
             catch

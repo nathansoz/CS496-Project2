@@ -200,9 +200,19 @@ namespace Project2.Controllers
                 return StatusCode(500);
             }
 
+            //Check and see if we have a slip that we need to remove the boat from
+            SlipEntity slip = (await _slipService.GetAsync()).SingleOrDefault(x => x.CurrentBoat == id);
+
             try
             {
                 await _boatService.DeleteAsync(boat.Id);
+
+                if (slip != null)
+                {
+                    slip.CurrentBoat = null;
+                    await _slipService.UpsertAsync(slip);
+                }
+
                 return Ok();
             }
             catch
