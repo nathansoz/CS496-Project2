@@ -357,7 +357,7 @@ namespace Project2.Controllers
 
             if(retrievedSlip.CurrentBoat != null)
             {
-                return BadRequest($"Slip with number {entity.Number} is occupied!");
+                return Forbid($"Slip with number {entity.Number} is occupied!");
             }
 
             BoatEntity retrievedBoat;
