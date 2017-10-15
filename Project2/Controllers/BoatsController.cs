@@ -145,6 +145,7 @@ namespace Project2.Controllers
             }
 
             replacementBoat.Id = id;
+            replacementBoat.AtSea = true;
 
             BoatEntity boat;
             try
