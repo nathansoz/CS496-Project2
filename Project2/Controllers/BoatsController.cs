@@ -382,5 +382,67 @@ namespace Project2.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Allow a boat to leave the slip
+        /// </summary>
+        /// <param name="id">The id of the boat</param>
+        /// <returns></returns>
+        [HttpDelete("{id}/arrival")]
+        public async Task<ActionResult> Leave(Guid id)
+        {
+            BoatEntity retrievedBoat;
+            try
+            {
+                retrievedBoat = await _boatService.GetAsync(id);
+            }
+            catch (DocumentClientException ex)
+            {
+                if (ex.Message.Contains("Resource Not Found"))
+                {
+                    return BadRequest("Boat does not exist");
+                }
+
+                return StatusCode(500);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+            if(retrievedBoat.AtSea)
+            {
+                return BadRequest("Boat is already at sea");
+            }
+
+            SlipEntity retrievedSlip;
+            try
+            {
+                retrievedSlip = (await _slipService.GetAsync()).SingleOrDefault(x => x.CurrentBoat == id);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+            if (retrievedSlip == null)
+            {
+                return BadRequest($"Slip with boat {id} does not exist.");
+            }
+
+            retrievedBoat.AtSea = false;
+            retrievedSlip.CurrentBoat = null;
+            retrievedSlip.ArrivalDate = null;
+
+            List<Task> completionObject = new List<Task>
+            {
+                _slipService.UpsertAsync(retrievedSlip),
+                _boatService.UpsertAsync(retrievedBoat)
+            };
+
+            await Task.WhenAll(completionObject);
+
+            return Ok();
+        }
     }
 }
