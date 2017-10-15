@@ -31,6 +31,11 @@ namespace Project2.Converters
         /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
+            if(reader.Value is DateTime || reader.Value == null)
+            {
+                return reader.Value;
+            }
+
             return DateTime.Parse((string)reader.Value);
         }
     }
