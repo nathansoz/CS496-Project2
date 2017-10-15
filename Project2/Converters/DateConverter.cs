@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Project2.Converters
 {
@@ -17,7 +18,20 @@ namespace Project2.Converters
         /// </summary>
         public DateConverter()
         {
-            DateTimeFormat = "yyyy-MM-dd";
+            DateTimeFormat = "MM/dd/yyyy";
+        }
+
+        /// <summary>
+        /// Default behavior for date. We only care about writing matching the new formatting
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="objectType"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return DateTime.Parse((string)reader.Value);
         }
     }
 }
