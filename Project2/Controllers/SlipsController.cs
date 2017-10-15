@@ -103,10 +103,11 @@ namespace Project2.Controllers
         }
 
         /// <summary>
-        /// Replace a slip
+        /// Replace a slip. As replacing/patching is the same thing, we just use both verbs here
         /// </summary>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public async Task<ActionResult> ReplaceSlip(Guid id, [FromBody]SlipEntity replacementSlip)
         {
             if (id == null || id == Guid.Empty)
