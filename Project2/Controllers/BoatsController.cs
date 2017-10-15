@@ -210,6 +210,7 @@ namespace Project2.Controllers
                 if (slip != null)
                 {
                     slip.CurrentBoat = null;
+                    slip.ArrivalDate = null;
                     await _slipService.UpsertAsync(slip);
                 }
 
