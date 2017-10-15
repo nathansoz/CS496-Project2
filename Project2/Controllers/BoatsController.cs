@@ -441,7 +441,7 @@ namespace Project2.Controllers
                 return BadRequest($"Slip with boat {id} does not exist.");
             }
 
-            retrievedBoat.AtSea = false;
+            retrievedBoat.AtSea = true;
             retrievedSlip.CurrentBoat = null;
             retrievedSlip.ArrivalDate = null;
 
