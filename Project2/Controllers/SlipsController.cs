@@ -190,11 +190,11 @@ namespace Project2.Controllers
                 return StatusCode(500);
             }
 
-            if(slip.CurrentBoat != null)
+            if(slip.CurrentBoat.HasValue)
             {
                 try
                 {
-                    BoatEntity boat = await _boatService.GetAsync(id);
+                    BoatEntity boat = await _boatService.GetAsync(slip.CurrentBoat.Value);
                     boat.AtSea = true;
                     await _boatService.UpsertAsync(boat);
                 }
