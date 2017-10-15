@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project2.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace Project2.Models
         /// The date the boat arrived
         /// </summary>
         [JsonProperty("arrival_date")]
+        [JsonConverter(typeof(DateConverter))]
         public DateTime? ArrivalDate { get; set; }
     }
 }
