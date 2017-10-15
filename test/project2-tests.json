@@ -1,0 +1,1283 @@
+{
+	"info": {
+		"name": "Project2",
+		"_postman_id": "cffdc796-dd01-618a-26dd-ac8ec0ad6c1b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add a new boat to the app",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains our boat name\", function () {",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"});",
+							"",
+							"pm.test(\"Response body contains an Id\", function() {",
+							"    pm.globals.unset(\"created_boat_id\");",
+							"    pm.globals.set(\"created_boat_id\", pm.response.json().id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"PostmanTestBoat\",\n\t\"type\": \"PostmanBoat\",\n\t\"length\": 80\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve the boat by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(80);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all boats",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response contains at least one object\", function () {",
+							"    pm.expect(pm.response.json().length > 0).to.equal(true);",
+							"});",
+							"",
+							"pm.test(\"Response contains an entry with our id\", function () {",
+							"    var found = false;",
+							"    for(i = 0; i < pm.response.json().length; i++) {",
+							"        if(pm.response.json()[i].id === pm.globals.get(\"created_boat_id\")) {",
+							"            found = true;",
+							"        }",
+							"    }",
+							"    ",
+							"    pm.expect(found).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify the boat to have a different length",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(42);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"length\": 42\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve the boat by id and check modified properties",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(42);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Put with only one property fails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"length\": 80\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Put with all properties to change the length back",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(80);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"PostmanTestBoat\",\n\t\"type\": \"PostmanBoat\",\n\t\"length\": 80\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve the boat by id and check modified properties",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(80);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a new slip to the app",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains our slip number\", function () {",
+							"    pm.expect(pm.response.json().number).to.equal(8888);",
+							"});",
+							"",
+							"pm.test(\"Response body contains an Id\", function() {",
+							"    pm.globals.unset(\"created_slip_id\");",
+							"    pm.globals.set(\"created_slip_id\", pm.response.json().id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\": 8888\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all slips",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response contains at least one object\", function () {",
+							"    pm.expect(pm.response.json().length > 0).to.equal(true);",
+							"});",
+							"",
+							"pm.test(\"Response contains an entry with our id\", function () {",
+							"    var found = false;",
+							"    for(i = 0; i < pm.response.json().length; i++) {",
+							"        if(pm.response.json()[i].id === pm.globals.get(\"created_slip_id\")) {",
+							"            found = true;",
+							"        }",
+							"    }",
+							"    ",
+							"    pm.expect(found).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve the slip by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_slip_id\"));",
+							"    pm.expect(pm.response.json().number).to.equal(8888);",
+							"    pm.expect(pm.response.json().current_boat).to.equal(null);",
+							"    pm.expect(pm.response.json().arrival_date).to.equal(null);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify the slip to have a different number",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_slip_id\"));",
+							"    pm.expect(pm.response.json().number).to.equal(8889);",
+							"    pm.expect(pm.response.json().current_boat).to.equal(null);",
+							"    pm.expect(pm.response.json().arrival_date).to.equal(null);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\": 8889\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Put to change the slip number back",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_slip_id\"));",
+							"    pm.expect(pm.response.json().number).to.equal(8888);",
+							"    pm.expect(pm.response.json().current_boat).to.equal(null);",
+							"    pm.expect(pm.response.json().arrival_date).to.equal(null);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\": 8888\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Dock our boat at the slip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"number\": 8888,\n    \"arrival_date\": \"3/17/1992\"\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}/arrival",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}",
+						"arrival"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check that the boat is no longer at sea",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(80);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(false);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check that the slip has a boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_slip_id\"));",
+							"    pm.expect(pm.response.json().number).to.equal(8888);",
+							"    pm.expect(pm.response.json().current_boat).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().arrival_date).to.equal(\"03/17/1992\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Undock our boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}/arrival",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}",
+						"arrival"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check that the boat is at sea",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(80);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check that the slip no longer has the docked boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_slip_id\"));",
+							"    pm.expect(pm.response.json().number).to.equal(8888);",
+							"    pm.expect(pm.response.json().current_boat).to.equal(null);",
+							"    pm.expect(pm.response.json().arrival_date).to.equal(null);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Re-dock the boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"number\": 8888,\n    \"arrival_date\": \"3/17/1992\"\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}/arrival",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}",
+						"arrival"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the slip the boat is docked at",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check that the boat is at sea",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(80);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a new slip to the app",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains our slip number\", function () {",
+							"    pm.expect(pm.response.json().number).to.equal(8888);",
+							"});",
+							"",
+							"pm.test(\"Response body contains an Id\", function() {",
+							"    pm.globals.unset(\"created_slip_id\");",
+							"    pm.globals.set(\"created_slip_id\", pm.response.json().id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\": 8888\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Re-dock the boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"number\": 8888,\n    \"arrival_date\": \"3/17/1992\"\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}/arrival",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}",
+						"arrival"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the boat that is docked",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check that the slip no longer has the docked boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_slip_id\"));",
+							"    pm.expect(pm.response.json().number).to.equal(8888);",
+							"    pm.expect(pm.response.json().current_boat).to.equal(null);",
+							"    pm.expect(pm.response.json().arrival_date).to.equal(null);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Ensure the boat is not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats/{{created_boat_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats",
+						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the slip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Ensure the slip is not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
