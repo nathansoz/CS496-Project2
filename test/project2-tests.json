@@ -752,6 +752,50 @@
 			"response": []
 		},
 		{
+			"name": "Check that the slip has a boat that can be accessed via Uri",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().id).to.equal(pm.globals.get(\"created_boat_id\"));",
+							"    pm.expect(pm.response.json().name).to.equal(\"PostmanTestBoat\");",
+							"    pm.expect(pm.response.json().length).to.equal(80);",
+							"    pm.expect(pm.response.json().type).to.equal(\"PostmanBoat\");",
+							"    pm.expect(pm.response.json().at_sea).to.equal(false);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}/boat",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}",
+						"boat"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "Undock our boat",
 			"event": [
 				{
@@ -874,6 +918,42 @@
 						"api",
 						"slips",
 						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check that the slip boat uri returns 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 404\"] = responseCode.code === 404;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}/boat",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}",
+						"boat"
 					]
 				},
 				"description": ""
