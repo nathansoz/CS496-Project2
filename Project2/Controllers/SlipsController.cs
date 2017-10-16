@@ -61,6 +61,57 @@ namespace Project2.Controllers
         }
 
         /// <summary>
+        /// Get a boat for a given slip
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/boat")]
+        public async Task<ActionResult> GetSlipBoat(Guid id)
+        {
+            SlipEntity slip;
+            try
+            {
+                slip = await _slipService.GetAsync(id);
+            }
+            catch (DocumentClientException ex)
+            {
+                if (ex.Message.Contains("Resource Not Found"))
+                {
+                    return BadRequest("Slip does not exist");
+                }
+
+                throw;
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+            if(!slip.CurrentBoat.HasValue)
+            {
+                return NotFound("The current slip has no boat");
+            }
+
+            try
+            {
+                return Ok(new BoatResponseEntity(await _boatService.GetAsync(slip.CurrentBoat.Value)));
+            }
+            catch (DocumentClientException ex)
+            {
+                if (ex.Message.Contains("Resource Not Found"))
+                {
+                    return BadRequest("Slip does not exist");
+                }
+
+                throw;
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
         /// Add a new boat
         /// </summary>
         /// <returns></returns>
