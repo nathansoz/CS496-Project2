@@ -7,6 +7,216 @@
 	},
 	"item": [
 		{
+			"name": "Add a new boat to the app with missing type fails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"PostmanTestBoat\",\n\t\"length\": 80\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a new boat to the app with missing name fails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"type\": \"A boat\",\n\t\"length\": 80\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a new boat to the app with missing length fails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"BoatyMcBoatFace\",\n\t\"type\": \"A boat\"\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a new boat to the app with length 0 fails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"BoatyMcBoatFace\",\n\t\"type\": \"A boat\",\n\t\"length\": 0\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a new boat to the app with no body fails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/boats",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "Add a new boat to the app",
 			"event": [
 				{
@@ -374,6 +584,90 @@
 						"api",
 						"boats",
 						"{{created_boat_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a slip with number 0 fails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"number\": 0\n}"
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a slip with no number fails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 400\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips"
 					]
 				},
 				"description": ""
