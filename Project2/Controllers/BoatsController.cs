@@ -38,12 +38,12 @@ namespace Project2.Controllers
         {
             if(id == Guid.Empty)
             {
-                return Ok(await _boatService.GetAsync());
+                return Ok((await _boatService.GetAsync()).Select(x => new BoatResponseEntity(x)));
             }
 
             try
             {
-                return Ok(await _boatService.GetAsync(id));
+                return Ok(new BoatResponseEntity(await _boatService.GetAsync(id)));
             }
             catch (DocumentClientException ex)
             {
@@ -99,7 +99,7 @@ namespace Project2.Controllers
             try
             {
                 await _boatService.UpsertAsync(boat);
-                return Ok(boat);
+                return Ok(new BoatResponseEntity(boat));
             }
             catch
             {
@@ -163,7 +163,7 @@ namespace Project2.Controllers
             try
             {
                 await _boatService.UpsertAsync(replacementBoat);
-                return Ok(replacementBoat);
+                return Ok(new BoatResponseEntity(replacementBoat));
             }
             catch
             {
@@ -290,7 +290,7 @@ namespace Project2.Controllers
                 await _boatService.UpsertAsync(boat);
             }
 
-            return Ok(boat);
+            return Ok(new BoatResponseEntity(boat));
         }
 
         /// <summary>
