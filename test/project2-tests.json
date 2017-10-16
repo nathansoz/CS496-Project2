@@ -789,6 +789,7 @@
 							"    pm.expect(pm.response.json().number).to.equal(8888);",
 							"    pm.expect(pm.response.json().current_boat).to.equal(null);",
 							"    pm.expect(pm.response.json().arrival_date).to.equal(null);",
+							"    pm.expect(pm.response.json().departure_history.length).to.equal(0);",
 							"});"
 						]
 					}
@@ -1191,6 +1192,45 @@
 							"    pm.expect(pm.response.json().number).to.equal(8888);",
 							"    pm.expect(pm.response.json().current_boat).to.equal(null);",
 							"    pm.expect(pm.response.json().arrival_date).to.equal(null);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://cs496-p2.azurewebsites.net/api/slips/{{created_slip_id}}",
+					"protocol": "http",
+					"host": [
+						"cs496-p2",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"slips",
+						"{{created_slip_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Check that the slip departure log has an entry",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"response code is 200\"] = responseCode.code === 200;",
+							"",
+							"pm.test(\"Response body contains all properties we expect\", function () {",
+							"    pm.expect(pm.response.json().departure_history.length > 0).to.equal(true);",
 							"});"
 						]
 					}
