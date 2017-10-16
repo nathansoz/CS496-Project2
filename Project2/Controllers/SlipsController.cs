@@ -43,6 +43,7 @@ namespace Project2.Controllers
 
             try
             {
+                var test = await _slipService.GetAsync(id);
                 return Ok(new SlipResponseEntity(await _slipService.GetAsync(id)));
             }
             catch (DocumentClientException ex)

@@ -14,6 +14,14 @@ namespace Project2.Models
     public class SlipEntity
     {
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        public SlipEntity()
+        {
+            DepartureHistory = new List<DepartureLogEntity>();
+        }
+
+        /// <summary>
         /// The id of the slip
         /// </summary>
         [JsonProperty("id")]
@@ -37,5 +45,11 @@ namespace Project2.Models
         [JsonProperty("arrival_date")]
         [JsonConverter(typeof(DateConverter))]
         public DateTime? ArrivalDate { get; set; }
+
+        /// <summary>
+        /// The departure history
+        /// </summary>
+        [JsonProperty("departure_history")]
+        public List<DepartureLogEntity> DepartureHistory { get; }
     }
 }
