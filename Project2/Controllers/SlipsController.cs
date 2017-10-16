@@ -38,12 +38,12 @@ namespace Project2.Controllers
         {
             if (id == Guid.Empty)
             {
-                return Ok(await _slipService.GetAsync());
+                return Ok((await _slipService.GetAsync()).Select(x => new SlipResponseEntity(x)));
             }
 
             try
             {
-                return Ok(await _slipService.GetAsync(id));
+                return Ok(new SlipResponseEntity(await _slipService.GetAsync(id)));
             }
             catch (DocumentClientException ex)
             {
@@ -94,7 +94,7 @@ namespace Project2.Controllers
             try
             {
                 await _slipService.UpsertAsync(slip);
-                return Ok(slip);
+                return Ok(new SlipResponseEntity(slip));
             }
             catch
             {
@@ -153,7 +153,7 @@ namespace Project2.Controllers
             try
             {
                 await _slipService.UpsertAsync(replacementSlip);
-                return Ok(replacementSlip);
+                return Ok(new SlipResponseEntity(replacementSlip));
             }
             catch
             {
