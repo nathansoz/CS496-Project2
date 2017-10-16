@@ -357,7 +357,7 @@ namespace Project2.Controllers
 
             if(retrievedSlip.CurrentBoat != null)
             {
-                return Forbid($"Slip with number {entity.Number} is occupied!");
+                return StatusCode(403, $"Slip with number {entity.Number} is occupied!");
             }
 
             BoatEntity retrievedBoat;
@@ -377,6 +377,11 @@ namespace Project2.Controllers
             catch
             {
                 return StatusCode(500);
+            }
+
+            if(!retrievedBoat.AtSea)
+            {
+                return BadRequest("Boat must sail to sea before docking at another slip.");
             }
 
             retrievedSlip.CurrentBoat = id;
@@ -399,9 +404,10 @@ namespace Project2.Controllers
         /// Allow a boat to leave the slip
         /// </summary>
         /// <param name="id">The id of the boat</param>
+        /// <param name="input"></param>
         /// <returns></returns>
         [HttpDelete("{id}/arrival")]
-        public async Task<ActionResult> Leave(Guid id)
+        public async Task<ActionResult> Leave(Guid id, [FromBody]DepartureInputEntity input)
         {
             BoatEntity retrievedBoat;
             try
@@ -442,9 +448,12 @@ namespace Project2.Controllers
                 return BadRequest($"Slip with boat {id} does not exist.");
             }
 
+            DepartureLogEntity departureLog = new DepartureLogEntity { BoatId = retrievedBoat.Id, DepartureDate = input?.DepartureDate ?? DateTime.Now };
+
             retrievedBoat.AtSea = true;
             retrievedSlip.CurrentBoat = null;
             retrievedSlip.ArrivalDate = null;
+            retrievedSlip.DepartureHistory.Add(departureLog);
 
             List<Task> completionObject = new List<Task>
             {

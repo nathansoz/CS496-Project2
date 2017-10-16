@@ -15,7 +15,7 @@ namespace Project2.Models
         /// The self URL reference
         /// </summary>
         [JsonProperty(PropertyName = "self")]
-        public string Self => $"/boats/{Id}";
+        public string Self => $"/api/boats/{Id}";
 
         /// <summary>
         /// Constructor that creates the response from a boat

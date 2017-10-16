@@ -15,7 +15,7 @@ namespace Project2.Models
         /// The self URL reference
         /// </summary>
         [JsonProperty(PropertyName = "self")]
-        public string Self => $"/slips/{Id}";
+        public string Self => $"/api/slips/{Id}";
 
         /// <summary>
         /// Default constructor
@@ -27,6 +27,7 @@ namespace Project2.Models
             Number = entity.Number;
             ArrivalDate = entity.ArrivalDate;
             CurrentBoat = entity.CurrentBoat;
+            DepartureHistory.AddRange(entity.DepartureHistory);
         }
     }
 }
